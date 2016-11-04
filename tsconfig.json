@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "amd",
+        "outFile": "./scripts/c4App.js",
+        "sourceMap": false
+    }
+}

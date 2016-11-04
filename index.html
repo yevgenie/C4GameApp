@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="c4App">
+    <head>
+        <title>Connect4 - Eugene Kolesnik</title>
+        
+        <!--<link href='./css/bootstrap.css' rel='stylesheet' type='text/css'>
+        <link href='./css/main.css' rel='stylesheet' type='text/css'>-->
+        <style>
+            /*todo: move to main.css*/
+            button
+            {
+                width: 50px;
+                height: 50px;
+                border-radius: 25px;
+                border: 1px solid black;
+                margin: 10px;
+                background: white;
+                cursor: pointer;
+            }
+
+            .player-1
+            {
+                background: red;
+            }
+            .player-2
+            {
+                background: blue;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+        <script src="scripts/c4App.js"></script>
+    </head>
+    <body ng-controller="GameController">
+        
+        <div>{{vm.msg}}</div>
+        <div ng-repeat="row in vm.board track by $index">
+            <button ng-repeat="cell in row track by $index" ng-click="vm.makeMove($index)" ng-class="'player-'+[cell]"></button>
+        </div>
+
+    </body>
+</html>
