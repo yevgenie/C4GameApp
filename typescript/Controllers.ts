@@ -4,8 +4,9 @@ module Controllers {
     export class GameController {
         public msg: string;
 
-        public board: Cell[][];
-        private currentPlayer: Players = Players.PlayerOne;
+        public board: CellType[][];
+        private currentPlayer: CellType = CellType.PlayerOne;
+        private winConditionCellCount = 4;
 
         constructor(private $scope: any) {
             $scope.vm = this;
@@ -22,7 +23,7 @@ module Controllers {
             for (let h = 0; h < height; h++) {
                 let newBoardRow: number[] = [];
                 for (let w = 0; w < width; w++) {
-                    newBoardRow.push(Cell.Empty);
+                    newBoardRow.push(CellType.None);
                 }
                 newBoard.push(newBoardRow);
             }
@@ -35,41 +36,51 @@ module Controllers {
             let rowIndex = this.getNextAvailableRowIndex(columnIndex);
 
             if (rowIndex !== -1) {
-                this.board[rowIndex][columnIndex] = Cell[Players[this.currentPlayer]]; // Conversion of Player enum to Cell Enum
-                this.currentPlayer = this.currentPlayer === Players.PlayerOne ? Players.PlayerTwo : Players.PlayerOne; // To support more than one player, this needs to be more robust
+                this.board[rowIndex][columnIndex] = this.currentPlayer; // Conversion of Player enum to Cell Enum
+                this.currentPlayer = this.currentPlayer === CellType.PlayerOne ? CellType.PlayerTwo : CellType.PlayerOne; // To support more than one player, this needs to be more robust
             }
+
+            this.checkWinConditions();
         }
 
         private getNextAvailableRowIndex(columnIndex: number): number {
 
             let rowIndex = -1;
 
-            for(let i = this.board.length - 1; i >= 0; i--)
-            {
-                if(this.board[i][columnIndex] === Cell.Empty)
-                {
+            for (let i = this.board.length - 1; i >= 0; i--) {
+                if (this.board[i][columnIndex] === CellType.None) {
                     rowIndex = i;
                     break;
                 }
-                console.log(i);
             }
-            
+
             return rowIndex;
         }
 
-        private checkWinConditions()
-        {
-            //todo
+        private checkWinConditions() {
+            // check horizontal win conditions
+            this.board.forEach((row) => {
+                let count = 0;
+                let currentPlayer: CellType;
+
+                row.forEach((cell) => {
+                    if (cell !== CellType.None && (cell === currentPlayer || count === 0)) {
+                        currentPlayer = cell;
+                        count++;
+                        if(count == this.winConditionCellCount)
+                        {
+                            console.log(currentPlayer.toString() + " wins!");
+                            //reset
+                            this.board = this.createBoard(6, 7);
+                        }
+                    }
+                });
+            });
         }
     }
 
-    enum Cell {
-        Empty,
-        PlayerOne,
-        PlayerTwo
-    }
-
-    enum Players {
+    enum CellType {
+        None,
         PlayerOne,
         PlayerTwo
     }
