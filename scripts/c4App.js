@@ -56,7 +56,7 @@ var Controllers;
         GameController.prototype.checkWinConditions = function () {
             return this.checkHorizontalWinCondition(this.board)
                 || this.checkHorizontalWinCondition(this.rotateBoard(this.board))
-                || this.checkVerticalWinCondition(this.board);
+                || this.checkDiagonalWinCondition(this.board);
         };
         GameController.prototype.checkHorizontalWinCondition = function (boardData) {
             // check horizontal win conditions
@@ -68,22 +68,22 @@ var Controllers;
             }
             return false;
         };
-        GameController.prototype.checkVerticalWinCondition = function (boardData) {
+        GameController.prototype.checkDiagonalWinCondition = function (boardData) {
             var acceptableIndex = this.winConditionCellCount - 1;
             for (var i = 0; i < boardData.length; i++) {
                 var row = boardData[i];
                 for (var j = 0; j < row.length; j++) {
                     if (i >= acceptableIndex || j >= acceptableIndex) {
-                        var verticalRow = [];
+                        var diagonalRow = [];
                         var iCount = i;
                         var jCount = j;
                         while (iCount >= 0 && jCount >= 0) {
-                            verticalRow.push(boardData[iCount][jCount]);
+                            diagonalRow.push(boardData[iCount][jCount]);
                             iCount--;
                             jCount--;
                         }
-                        if (verticalRow.length > 0) {
-                            console.log(verticalRow);
+                        if (diagonalRow.length > 0) {
+                            console.log(diagonalRow);
                         }
                     }
                 }

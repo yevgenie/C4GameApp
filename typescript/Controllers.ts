@@ -73,7 +73,7 @@ module Controllers {
         private checkWinConditions(): boolean {
             return this.checkHorizontalWinCondition(this.board)
             || this.checkHorizontalWinCondition(this.rotateBoard(this.board))
-            || this.checkVerticalWinCondition(this.board);
+            || this.checkDiagonalWinCondition(this.board);
         }
 
         private checkHorizontalWinCondition(boardData: CellType[][]): boolean {
@@ -88,22 +88,22 @@ module Controllers {
             return false;
         }
 
-        private checkVerticalWinCondition(boardData: CellType[][]): boolean {
+        private checkDiagonalWinCondition(boardData: CellType[][]): boolean {
             let acceptableIndex = this.winConditionCellCount - 1;
             for (let i = 0; i < boardData.length; i++) {
                 let row = boardData[i];
                 for (let j = 0; j < row.length; j++) {
                     if(i >= acceptableIndex || j >= acceptableIndex) {
-                        let verticalRow: CellType[] = [];
+                        let diagonalRow: CellType[] = [];
                         let iCount = i;
                         let jCount = j;
                         while(iCount >= 0 && jCount >= 0) {
-                            verticalRow.push(boardData[iCount][jCount]);
+                            diagonalRow.push(boardData[iCount][jCount]);
                             iCount--;
                             jCount--;
                         }
-                        if(verticalRow.length > 0) {
-                            console.log(verticalRow);
+                        if(diagonalRow.length > 0) {
+                            console.log(diagonalRow);
                         }
                     }
                 }
