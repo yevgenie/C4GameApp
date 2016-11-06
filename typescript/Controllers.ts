@@ -2,22 +2,21 @@
 
 module Controllers {
     export class GameController {
-        public msg: string;
 
+        public msg: string;
         public board: CellType[][];
         public currentPlayer: CellType = CellType.PlayerOne;
+
         private winConditionCellCount = 4;
 
         constructor(private $scope: any) {
             $scope.vm = this;
-
             this.msg = "Welcome to Connect 4 Game in Angular!";
             this.board = this.createBoard(6, 7);
             console.log(this.msg);
         }
 
         private createBoard = (height: number, width: number): number[][] => {
-
             let newBoard: number[][] = [];
 
             for (let h = 0; h < height; h++) {
@@ -32,7 +31,6 @@ module Controllers {
         }
 
         private rotateBoard = (boardData: CellType[][]): CellType[][] => {
-
             let rotatedBoard: CellType[][] = [];
             let height = boardData[0].length;
             let width = boardData.length;
@@ -49,7 +47,6 @@ module Controllers {
         }
 
         public makeMove(columnIndex: number) {
-
             let rowIndex = this.getNextAvailableRowIndex(columnIndex);
 
             if (rowIndex !== -1) {
@@ -61,7 +58,6 @@ module Controllers {
         }
 
         private getNextAvailableRowIndex(columnIndex: number): number {
-
             let rowIndex = -1;
 
             for (let i = this.board.length - 1; i >= 0; i--) {
@@ -75,7 +71,9 @@ module Controllers {
         }
 
         private checkWinConditions(): boolean {
-            return this.checkHorizontalWinCondition(this.board) || this.checkHorizontalWinCondition(this.rotateBoard(this.board));
+            return this.checkHorizontalWinCondition(this.board)
+            || this.checkHorizontalWinCondition(this.rotateBoard(this.board))
+            || this.checkVerticalWinCondition(this.board);
         }
 
         private checkHorizontalWinCondition(boardData: CellType[][]): boolean {
@@ -85,6 +83,29 @@ module Controllers {
                 if(this.checkRowForWin(row))
                 {
                     return true;
+                }
+            }
+            return false;
+        }
+
+        private checkVerticalWinCondition(boardData: CellType[][]): boolean {
+            let acceptableIndex = this.winConditionCellCount - 1;
+            for (let i = 0; i < boardData.length; i++) {
+                let row = boardData[i];
+                for (let j = 0; j < row.length; j++) {
+                    if(i >= acceptableIndex || j >= acceptableIndex) {
+                        let verticalRow: CellType[] = [];
+                        let iCount = i;
+                        let jCount = j;
+                        while(iCount >= 0 && jCount >= 0) {
+                            verticalRow.push(boardData[iCount][jCount]);
+                            iCount--;
+                            jCount--;
+                        }
+                        if(verticalRow.length > 0) {
+                            console.log(verticalRow);
+                        }
+                    }
                 }
             }
             return false;
