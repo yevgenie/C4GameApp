@@ -21,10 +21,12 @@
             .player-1
             {
                 background: red;
+                color: white;
             }
             .player-2
             {
                 background: blue;
+                color: white;
             }
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
@@ -32,7 +34,7 @@
     </head>
     <body ng-controller="GameController">
         
-        <div>{{vm.msg}}</div>
+        <div>{{vm.msg}} - <span ng-class="'player-'+[vm.currentPlayer]">Player {{vm.currentPlayer}}'s turn.</span></div>
         <div ng-repeat="row in vm.board track by $index">
             <button ng-repeat="cell in row track by $index" ng-click="vm.makeMove($index)" ng-class="'player-'+[cell]"></button>
         </div>

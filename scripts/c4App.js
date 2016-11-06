@@ -17,6 +17,19 @@ var Controllers;
                 }
                 return newBoard;
             };
+            this.rotateBoard = function (boardData) {
+                var rotatedBoard = [];
+                var height = boardData[0].length;
+                var width = boardData.length;
+                for (var h = 0; h < height; h++) {
+                    var newBoardRow = [];
+                    for (var w = 0; w < width; w++) {
+                        newBoardRow.push(boardData[w][h]);
+                    }
+                    rotatedBoard.push(newBoardRow);
+                }
+                return rotatedBoard;
+            };
             $scope.vm = this;
             this.msg = "Welcome to Connect 4 Game in Angular!";
             this.board = this.createBoard(6, 7);
@@ -41,23 +54,43 @@ var Controllers;
             return rowIndex;
         };
         GameController.prototype.checkWinConditions = function () {
-            var _this = this;
+            return this.checkHorizontalWinCondition(this.board) || this.checkHorizontalWinCondition(this.rotateBoard(this.board));
+        };
+        GameController.prototype.checkHorizontalWinCondition = function (boardData) {
             // check horizontal win conditions
-            this.board.forEach(function (row) {
-                var count = 0;
-                var currentPlayer;
-                row.forEach(function (cell) {
-                    if (cell !== CellType.None && (cell === currentPlayer || count === 0)) {
-                        currentPlayer = cell;
-                        count++;
-                        if (count == _this.winConditionCellCount) {
-                            console.log(currentPlayer.toString() + " wins!");
-                            //reset
-                            _this.board = _this.createBoard(6, 7);
-                        }
+            for (var i = 0; i < boardData.length; i++) {
+                var row = boardData[i];
+                if (this.checkRowForWin(row)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        GameController.prototype.checkRowForWin = function (row) {
+            var count = 0;
+            var previousCell = CellType.None;
+            for (var j = 0; j < row.length; j++) {
+                var cell = row[j];
+                if (cell !== previousCell || cell === CellType.None) {
+                    count = 0;
+                    previousCell = cell;
+                }
+                else {
+                    count++;
+                    if (count == this.winConditionCellCount - 1) {
+                        this.anounceWinnerAndResetBoard(previousCell);
+                        return true;
                     }
-                });
-            });
+                }
+            }
+            return false;
+        };
+        GameController.prototype.anounceWinnerAndResetBoard = function (player) {
+            var color = player.toString() === '1' ? 'RED' : 'BLUE';
+            console.log(color + " wins!");
+            this.msg = color + " wins!";
+            //reset
+            this.board = this.createBoard(6, 7);
         };
         return GameController;
     }());

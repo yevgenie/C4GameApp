@@ -5,7 +5,7 @@ module Controllers {
         public msg: string;
 
         public board: CellType[][];
-        private currentPlayer: CellType = CellType.PlayerOne;
+        public currentPlayer: CellType = CellType.PlayerOne;
         private winConditionCellCount = 4;
 
         constructor(private $scope: any) {
@@ -16,7 +16,7 @@ module Controllers {
             console.log(this.msg);
         }
 
-        public createBoard = (height: number, width: number): number[][] => {
+        private createBoard = (height: number, width: number): number[][] => {
 
             let newBoard: number[][] = [];
 
@@ -29,6 +29,23 @@ module Controllers {
             }
 
             return newBoard;
+        }
+
+        private rotateBoard = (boardData: CellType[][]): CellType[][] => {
+
+            let rotatedBoard: CellType[][] = [];
+            let height = boardData[0].length;
+            let width = boardData.length;
+
+            for (let h = 0; h < height; h++) {
+                let newBoardRow: number[] = [];
+                for (let w = 0; w < width; w++) {
+                    newBoardRow.push(boardData[w][h]);
+                }
+                rotatedBoard.push(newBoardRow);
+            }
+
+            return rotatedBoard;
         }
 
         public makeMove(columnIndex: number) {
@@ -57,25 +74,51 @@ module Controllers {
             return rowIndex;
         }
 
-        private checkWinConditions() {
-            // check horizontal win conditions
-            this.board.forEach((row) => {
-                let count = 0;
-                let currentPlayer: CellType;
+        private checkWinConditions(): boolean {
+            return this.checkHorizontalWinCondition(this.board) || this.checkHorizontalWinCondition(this.rotateBoard(this.board));
+        }
 
-                row.forEach((cell) => {
-                    if (cell !== CellType.None && (cell === currentPlayer || count === 0)) {
-                        currentPlayer = cell;
-                        count++;
-                        if(count == this.winConditionCellCount)
-                        {
-                            console.log(currentPlayer.toString() + " wins!");
-                            //reset
-                            this.board = this.createBoard(6, 7);
-                        }
+        private checkHorizontalWinCondition(boardData: CellType[][]): boolean {
+            // check horizontal win conditions
+            for (let i = 0; i < boardData.length; i++) {
+                let row = boardData[i];
+                if(this.checkRowForWin(row))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private checkRowForWin(row: CellType[]): boolean {
+            let count = 0;
+            let previousCell: CellType = CellType.None;
+
+            for (let j = 0; j < row.length; j++) {
+                let cell = row[j];
+                if (cell !== previousCell || cell === CellType.None)
+                {
+                    count = 0;
+                    previousCell = cell;
+                }
+                else
+                {
+                    count++;
+                    if (count == this.winConditionCellCount - 1) {
+                        this.anounceWinnerAndResetBoard(previousCell);
+                        return true;
                     }
-                });
-            });
+                }
+            }
+            return false;
+        }
+
+        private anounceWinnerAndResetBoard(player: CellType) {
+            let color: string = player.toString() === '1' ? 'RED' : 'BLUE'; // todo move to player:color assignment
+            console.log(color + " wins!");
+            this.msg = color + " wins!";
+            //reset
+            this.board = this.createBoard(6, 7);
         }
     }
 
