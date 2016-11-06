@@ -89,23 +89,30 @@ module Controllers {
         }
 
         private checkDiagonalWinCondition(boardData: CellType[][]): boolean {
-            let acceptableIndex = this.winConditionCellCount - 1;
             for (let i = 0; i < boardData.length; i++) {
                 let row = boardData[i];
                 for (let j = 0; j < row.length; j++) {
-                    if(i >= acceptableIndex || j >= acceptableIndex) {
-                        let diagonalRow: CellType[] = [];
+                        let diagonalRowDownward: CellType[] = [];
+                        let diagonalRowUpward: CellType[] = [];
                         let iCount = i;
                         let jCount = j;
                         while(iCount >= 0 && jCount >= 0) {
-                            diagonalRow.push(boardData[iCount][jCount]);
+                            diagonalRowDownward.push(boardData[iCount][jCount]);
+                            diagonalRowUpward.push(boardData[iCount][row.length - 1 - jCount]);
                             iCount--;
                             jCount--;
                         }
-                        if(diagonalRow.length > 0) {
-                            console.log(diagonalRow);
+
+                        if(diagonalRowDownward.length > this.winConditionCellCount - 1) {
+                            if(this.checkRowForWin(diagonalRowDownward)) {
+                                return true;
+                            };
                         }
-                    }
+                        if(diagonalRowUpward.length > this.winConditionCellCount - 1) {
+                            if(this.checkRowForWin(diagonalRowUpward)) {
+                                return true;
+                            };
+                        }
                 }
             }
             return false;

@@ -69,22 +69,30 @@ var Controllers;
             return false;
         };
         GameController.prototype.checkDiagonalWinCondition = function (boardData) {
-            var acceptableIndex = this.winConditionCellCount - 1;
             for (var i = 0; i < boardData.length; i++) {
                 var row = boardData[i];
                 for (var j = 0; j < row.length; j++) {
-                    if (i >= acceptableIndex || j >= acceptableIndex) {
-                        var diagonalRow = [];
-                        var iCount = i;
-                        var jCount = j;
-                        while (iCount >= 0 && jCount >= 0) {
-                            diagonalRow.push(boardData[iCount][jCount]);
-                            iCount--;
-                            jCount--;
+                    var diagonalRowDownward = [];
+                    var diagonalRowUpward = [];
+                    var iCount = i;
+                    var jCount = j;
+                    while (iCount >= 0 && jCount >= 0) {
+                        diagonalRowDownward.push(boardData[iCount][jCount]);
+                        diagonalRowUpward.push(boardData[iCount][row.length - 1 - jCount]);
+                        iCount--;
+                        jCount--;
+                    }
+                    if (diagonalRowDownward.length > this.winConditionCellCount - 1) {
+                        if (this.checkRowForWin(diagonalRowDownward)) {
+                            return true;
                         }
-                        if (diagonalRow.length > 0) {
-                            console.log(diagonalRow);
+                        ;
+                    }
+                    if (diagonalRowUpward.length > this.winConditionCellCount - 1) {
+                        if (this.checkRowForWin(diagonalRowUpward)) {
+                            return true;
                         }
+                        ;
                     }
                 }
             }
