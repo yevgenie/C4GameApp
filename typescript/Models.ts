@@ -4,4 +4,10 @@ module Models {
         PlayerOne,
         PlayerTwo
     }
+
+    export enum GameMode {
+        TwoPlayer,
+        VsAIStandard,
+        VsAIHard
+    }
 }

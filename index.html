@@ -7,7 +7,7 @@
         <link href='./css/main.css' rel='stylesheet' type='text/css'>-->
         <style>
             /*todo: move to main.css*/
-            button
+            .c4game button
             {
                 width: 50px;
                 height: 50px;
@@ -18,15 +18,20 @@
                 cursor: pointer;
             }
 
-            .player-1
+            .c4game button.player-1
             {
                 background: red;
                 color: white;
             }
-            .player-2
+            .c4game button.player-2 
             {
                 background: blue;
                 color: white;
+            }
+
+            button.on
+            {
+                background: lime;
             }
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
@@ -35,8 +40,16 @@
     <body ng-controller="GameController">
         
         <div>{{vm.msg}} - <span ng-class="'player-'+[vm.currentPlayer]">Player {{vm.currentPlayer}}'s turn.</span></div>
-        <div ng-repeat="row in vm.board track by $index">
-            <button ng-repeat="cell in row track by $index" ng-click="vm.makeMove($index)" ng-class="'player-'+[cell]"></button>
+        <div class="c4game">
+            <div ng-repeat="row in vm.board track by $index">
+                <button ng-repeat="cell in row track by $index" ng-click="vm.makeMove($index)" ng-class="'player-'+[cell]"></button>
+            </div>
+        </div>
+        <div>
+            Select Game Mode
+            <button ng-click="vm.changeGameMode(0)" ng-class="{'on':vm.gameMode === 0}">Two Player</button>
+            <button ng-click="vm.changeGameMode(1)" ng-class="{'on':vm.gameMode === 1}">VS AI - Standard</button>
+            <button ng-click="vm.changeGameMode(2)" ng-class="{'on':vm.gameMode === 2}">VS AI - Hard</button>
         </div>
 
     </body>

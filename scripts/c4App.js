@@ -6,6 +6,12 @@ var Models;
         CellType[CellType["PlayerTwo"] = 2] = "PlayerTwo";
     })(Models.CellType || (Models.CellType = {}));
     var CellType = Models.CellType;
+    (function (GameMode) {
+        GameMode[GameMode["TwoPlayer"] = 0] = "TwoPlayer";
+        GameMode[GameMode["VsAIStandard"] = 1] = "VsAIStandard";
+        GameMode[GameMode["VsAIHard"] = 2] = "VsAIHard";
+    })(Models.GameMode || (Models.GameMode = {}));
+    var GameMode = Models.GameMode;
 })(Models || (Models = {}));
 /// <reference path="typings/angularjs/angular.d.ts" />
 /// <reference path="Models.ts" />
@@ -20,17 +26,35 @@ var Controllers;
             this._$scope.vm = this;
             this.msg = "Welcome to Connect 4 Game in Angular!";
             this.board = this._c4Service.createBoard(6, 7);
+            this.gameMode = Models.GameMode.TwoPlayer;
             console.log(this.msg);
         }
+        GameController.prototype.changeGameMode = function (mode) {
+            this.gameMode = mode;
+            this.resetBoard();
+            if (this.gameMode === Models.GameMode.VsAIStandard) {
+                // first pass, AI always makes first move to center
+                var firstMoveIndex = Math.floor(this.board[0].length / 2);
+                this.aiPlayer = this.currentPlayer;
+                this.makeMove(firstMoveIndex);
+                console.log("First Move Made by AI as Player " + this.aiPlayer);
+            }
+        };
         GameController.prototype.makeMove = function (columnIndex) {
             var rowIndex = this.getNextAvailableRowIndex(columnIndex);
             this._moveCount++;
             if (rowIndex !== -1) {
-                this.board[rowIndex][columnIndex] = this.currentPlayer; // Conversion of Player enum to Cell Enum
+                this.board[rowIndex][columnIndex] = this.currentPlayer;
                 if (this._c4Service.checkWinConditions(this.board)) {
-                    this.anounceWinnerAndResetBoard();
+                    this.anounceWinner();
                 }
                 this.currentPlayer = this.currentPlayer === Models.CellType.PlayerOne ? Models.CellType.PlayerTwo : Models.CellType.PlayerOne; // To support more than one player, this needs to be more robust
+            }
+            if (this.gameMode === Models.GameMode.VsAIStandard && this.aiPlayer === this.currentPlayer) {
+                // check for win-condition moves, if found, make it
+                // check for lose-condition moves open for oponnent, if found, make it
+                // pick random open move (not smart-mode)
+                this.makeMove(Math.floor(this.board[0].length / 2));
             }
         };
         GameController.prototype.getNextAvailableRowIndex = function (columnIndex) {
@@ -43,11 +67,13 @@ var Controllers;
             }
             return rowIndex;
         };
-        GameController.prototype.anounceWinnerAndResetBoard = function () {
+        GameController.prototype.anounceWinner = function () {
             var color = this.currentPlayer.toString() === '1' ? 'RED' : 'BLUE'; // todo move to player:color assignment
             alert(color + " wins!");
             this.msg = color + " wins!";
-            //reset
+            this.resetBoard();
+        };
+        GameController.prototype.resetBoard = function () {
             this._moveCount = 0;
             this.board = this._c4Service.createBoard(6, 7);
         };
