@@ -77,7 +77,7 @@ var Controllers;
                         this.board[possibleMoveRowIndex][i] = Models.CellType.None;
                     }
                 }
-                // pick random open move (not smart-mode)
+                // else pick random open move (not smart-mode)
                 console.log("AI Move to col. index: " + aiMoveIndex);
                 this.makeMove(aiMoveIndex);
             }
@@ -132,7 +132,7 @@ var Services;
         function C4Service() {
             var _this = this;
             this._winConditionCellCount = 4; // default 4
-            this.setWindConditionCellCount = function (count) {
+            this.setWinConditionCellCount = function (count) {
                 _this._winConditionCellCount = count;
             };
             this.createBoard = function (height, width) {

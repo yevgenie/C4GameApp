@@ -7,12 +7,11 @@ module Controllers {
         public msg: string;
         public board: Models.CellType[][];
         public gameMode: Models.GameMode;
-
+        public gameOver: boolean;
         public currentPlayer: Models.CellType;
+
         private _aiPlayer: Models.CellType;
         private _personPlayer: Models.CellType;
-
-        public gameOver: boolean;
         private _moveCount = 0;
 
         constructor(private _$scope: any, private _c4Service: Services.C4Service) {
@@ -75,7 +74,7 @@ module Controllers {
                         this.board[possibleMoveRowIndex][i] = Models.CellType.None;
                     }
                 }
-                // pick random open move (not smart-mode)
+                // else pick random open move (not smart-mode)
                 console.log("AI Move to col. index: " + aiMoveIndex);
                 this.makeMove(aiMoveIndex);
             }

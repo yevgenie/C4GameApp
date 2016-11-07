@@ -9,7 +9,7 @@ module Services {
         constructor() {
         }
 
-        public setWindConditionCellCount = (count: number) => {
+        public setWinConditionCellCount = (count: number) => {
             this._winConditionCellCount = count;
         }
 
