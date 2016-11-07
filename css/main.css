@@ -1,0 +1,47 @@
+body, html
+{
+    padding: 15px;
+}
+
+.c4game
+{
+    display: inline-block;
+    margin: auto;
+    border: 10px solid black;
+    padding: 15px;
+}
+
+.c4game button
+{
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    border: 1px solid black;
+    margin: 10px;
+    background: white;
+    cursor: pointer;
+}
+
+.player-1,
+.c4game button.player-1
+{
+    background: red;
+    color: white;
+}
+
+.player-2,
+.c4game button.player-2 
+{
+    background: blue;
+    color: white;
+}
+
+.controls
+{
+    margin: 15px;
+}
+
+button.on
+{
+    background: lime;
+}
